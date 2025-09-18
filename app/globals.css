@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Press+Start+2P&display=swap');
+
+:root{
+  --bg: #0f172a; 
+  --fg: #e6eef8; 
+  --white-key: #fff; 
+  --black-key: #111827; 
+  --accent: #7c3aed;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg);
+  color: var(--fg);
+}
+
+h1 {
+  font-family: 'Press Start 2P', cursive;
+}
+
+/* Keyboard specific styles */
+.keyboard {
+  display: flex;
+  user-select: none;
+  position: relative; /* Added for absolute positioning of black keys */
+}
+
+.key {
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  font-size: 0.75rem; /* text-xs */
+}
+
+.key.white {
+  background: var(--white-key);
+  color: var(--black-key); /* Changed for contrast */
+  width: 80px;
+  height: 320px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.key.black {
+  background: var(--black-key);
+  color: #fff;
+  width: 56px;
+  height: 200px;
+  position: absolute; /* Changed to absolute */
+  z-index: 20; /* Ensure it's on top */
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  /* left property will be set inline in JS */
+}
+
+.key.highlight-melody {
+  background: var(--note-color); /* Change background to note color */
+  color: var(--fg); /* Ensure text color is visible on note background */
+}
+
+.key.highlight-pressed {
+  background: var(--pressed-key-color); /* Change background to pressed key color */
+  color: var(--fg); /* Ensure text color is visible on pressed key background */
+}
+
+.canvas-wrap {
+  position: relative;
+  height: 440px;
+  background: #021024;
+  margin-top: 1rem;
+}
+
+/* Custom styles for Controls component gap */
+.controls-grid > div {
+  padding: 1rem; /* Equivalent to Tailwind's p-4 */
+  margin: 0.5rem; /* Add some margin around each control item */
+  background-color: #1f2937; /* A slightly darker background to make the padding visible */
+  border-radius: 0.5rem; /* Rounded corners */
+}
+
+/* Adjust the main grid container's padding if needed, as children now have padding */
+.controls-grid {
+  padding: 1rem; /* Reduce overall padding if children have padding */
+}
+
+/* Add margin to icons within labels in controls-grid */
+.controls-grid label svg {
+  margin-right: 0.5rem; /* Equivalent to Tailwind's mr-2 */
+}
