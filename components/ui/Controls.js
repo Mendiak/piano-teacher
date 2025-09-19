@@ -1,6 +1,5 @@
 import React from 'react';
-import { FaPlay, FaStop, FaChartBar, FaMusic, FaGamepad, FaTachometerAlt, FaPalette } from 'react-icons/fa';
-import { themes } from './themes.js';
+import { FaPlay, FaStop, FaChartBar, FaMusic, FaGamepad, FaTachometerAlt, FaPalette, FaSun, FaMoon } from 'react-icons/fa';
 import { synthPresets } from '../synth-presets.js';
 
 export default function Controls({
@@ -94,22 +93,7 @@ export default function Controls({
         <span style={{ fontSize: '0.875rem', color: 'var(--fg)' }}>{Math.round(tempoFactor * 100)}%</span>
       </div>
 
-      {/* Theme Selection */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '150px', flexGrow: 1 }}>
-        <label htmlFor="theme-select" style={{ display: 'flex', alignItems: 'center', fontSize: '1.125rem', fontWeight: '600', color: 'var(--fg)' }}>
-          <FaPalette style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Tema:
-        </label>
-        <select
-          id="theme-select"
-          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
-          value={theme}
-          onChange={e => setTheme(e.target.value)}
-        >
-          {Object.keys(themes).map(themeKey => (
-            <option key={themeKey} value={themeKey}>{themes[themeKey].name}</option>
-          ))}
-        </select>
-      </div>
+
 
       {/* Synth Selection */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '150px', flexGrow: 1 }}>
@@ -133,20 +117,20 @@ export default function Controls({
         <button
           onClick={() => startPlayback()}
           disabled={isPlaying || !midi}
-          style={{ backgroundColor: 'var(--accent)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', transitionProperty: 'background-color', transitionDuration: '200ms', opacity: (isPlaying || !midi) ? 0.5 : 1, cursor: (isPlaying || !midi) ? 'not-allowed' : 'pointer' }}
+          style={{ backgroundColor: 'var(--accent)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', transitionProperty: 'background-color', transitionDuration: '200ms', opacity: (isPlaying || !midi) ? 0.5 : 1, cursor: (isPlaying || !midi) ? 'not-allowed' : 'pointer' }}
         >
           <FaPlay style={{ marginRight: '0.5rem' }} /> Play
         </button>
         <button
           onClick={() => stopPlayback()}
           disabled={!isPlaying}
-          style={{ backgroundColor: 'var(--black-key)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', transitionProperty: 'background-color', transitionDuration: '200ms' }}
+          style={{ backgroundColor: 'var(--black-key)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', transitionProperty: 'background-color', transitionDuration: '200ms' }}
         >
           <FaStop style={{ marginRight: '0.5rem' }} /> Stop
         </button>
         <button
           onClick={() => showResults()}
-          style={{ backgroundColor: 'var(--accent)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', transitionProperty: 'background-color', transitionDuration: '200ms' }}
+          style={{ backgroundColor: 'var(--accent)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', transitionProperty: 'background-color', transitionDuration: '200ms' }}
         >
           <FaChartBar style={{ marginRight: '0.5rem' }} /> Resultados
         </button>

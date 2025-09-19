@@ -8,6 +8,7 @@ export const themes = {
       '--select-fg': '#f0f0f0',
       '--white-key': '#ffffff', // White keys
       '--black-key': '#333333', // Black keys (dark gray)
+      '--white-key-border': '#ccc', // Border for white keys
       '--accent': '#007bff', // Vibrant blue accent
       '--note-color': '#007bff', // Notes in accent color
       '--pressed-key-color': '#66b3ff', // Pressed keys in a lighter shade of accent
@@ -22,6 +23,7 @@ export const themes = {
       '--select-fg': '#f0f0f0',
       '--white-key': '#cccccc', // White keys (light gray)
       '--black-key': '#000000', // Black keys (black)
+      '--white-key-border': '#333333', // Border for white keys
       '--accent': '#007bff', // Vibrant blue accent
       '--note-color': '#007bff', // Notes in accent color
       '--pressed-key-color': '#66b3ff', // Pressed keys in a lighter shade of accent

@@ -112,7 +112,7 @@ export default function PianoTeacherApp(){
       <div className="bg-bg text-fg min-h-screen p-4 flex flex-col items-center">
       <div style={pianoContainerStyle} className={`rounded-lg shadow-lg`}>
         <div style={{ padding: '50px' }}>
-          <Header theme={theme} midiError={midiError} connectedInputs={connectedInputs} />
+          <Header theme={theme} setTheme={setTheme} midiError={midiError} connectedInputs={connectedInputs} />
           {/* Controls component below the header, spanning full width */}
           <Controls
             selectedSong={selectedSong}
