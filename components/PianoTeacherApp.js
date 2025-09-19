@@ -10,6 +10,7 @@ import Score from './ui/Score.js';
 import FallingNotesCanvas from './ui/FallingNotesCanvas.js';
 import { themes } from './ui/themes.js';
 import { synthPresets } from './synth-presets.js';
+import { useMidi } from '../hooks/useMidi.js';
 
 // --- Utility helpers ---
 const MIDI_TO_NOTE = (midi) => {
@@ -21,9 +22,7 @@ const MIDI_TO_NOTE = (midi) => {
 
 // --- Main component ---
 export default function PianoTeacherApp(){
-  const [midiAccess, setMidiAccess] = useState(null);
-  const [connectedInputs, setConnectedInputs] = useState([]);
-  const [midiError, setMidiError] = useState(null);
+  const { midiAccess, connectedInputs, midiError } = useMidi();
   const [mode, setMode] = useState('step');
   const [midi, setMidi] = useState(null);
   const [events, setEvents] = useState([]);
@@ -66,21 +65,7 @@ export default function PianoTeacherApp(){
     return { midi, note: MIDI_TO_NOTE(midi) };
   });
 
-  useEffect(() => {
-    if (navigator.requestMIDIAccess) {
-      navigator.requestMIDIAccess().then(ma => {
-        setMidiAccess(ma);
-        const inputs = Array.from(ma.inputs.values());
-        setConnectedInputs(inputs);
-        ma.onstatechange = () => setConnectedInputs(Array.from(ma.inputs.values()));
-      }).catch(e => {
-        console.warn('MIDI not available', e);
-        setMidiError('MIDI not available. Please use a compatible browser (Chrome, Edge) and grant permission.');
-      });
-    } else {
-      setMidiError('Web MIDI API is not supported in this browser.');
-    }
-  }, []);
+
 
   useEffect(() => {
     const preset = synthPresets[selectedSynthPreset];
