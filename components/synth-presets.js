@@ -1,4 +1,4 @@
-import * as Tone from 'tone';
+
 
 export const synthPresets = {
   default: {
