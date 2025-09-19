@@ -102,52 +102,58 @@ export default function PianoTeacherApp(){
     showResults
   );
 
-
-
-
-
-
-
+  const pianoContainerStyle = {
+    backgroundColor: theme === 'light' ? '#e8e8e8' : '#3a3a3a'
+  };
 
   return (
     <>
       <CountdownOverlay countdownValue={countdownValue} />
       <div className="bg-bg text-fg min-h-screen p-4 flex flex-col items-center">
-        <Header theme={theme} midiError={midiError} connectedInputs={connectedInputs} />
-        {/* Controls component below the header, spanning full width */}
-        <Controls
-          selectedSong={selectedSong}
-          handleSongSelection={handleSongSelection}
-          midiLibrary={midiLibrary}
-          loadMidi={loadMidi}
-          mode={mode}
-          setMode={setMode}
-          tempoFactor={tempoFactor}
-          setTempoFactor={setTempoFactor}
-          startPlayback={startPlayback}
-          stopPlayback={stopPlayback}
-          showResults={showResults}
-          isPlaying={isPlaying}
-          midi={midi}
-          theme={theme}
-          setTheme={setTheme}
-          selectedSynthPreset={selectedSynthPreset}
-          setSelectedSynthPreset={setSelectedSynthPreset}
-          className="mb-4" 
-        /> {/* Added mb-4 for bottom margin */}
-        <FallingNotesCanvas canvasRef={canvasRef} height={220} />
-        {isClient && (
-          <Keyboard
-            keys={keys}
-            events={events}
-            currentIdx={currentIdx}
+      <div style={pianoContainerStyle} className={`rounded-lg shadow-lg`}>
+        <div style={{ padding: '50px' }}>
+          <Header theme={theme} midiError={midiError} connectedInputs={connectedInputs} />
+          {/* Controls component below the header, spanning full width */}
+          <Controls
+            selectedSong={selectedSong}
+            handleSongSelection={handleSongSelection}
+            midiLibrary={midiLibrary}
+            loadMidi={loadMidi}
             mode={mode}
-            keyRefs={keyRefs}
-            keyboardRef={keyboardRef}
-            pressedKeys={pressedKeys}
-          />
-        )}
-        <Score score={score} combo={combo} hits={hits} misses={misses} />
+            setMode={setMode}
+            tempoFactor={tempoFactor}
+            setTempoFactor={setTempoFactor}
+            startPlayback={startPlayback}
+            stopPlayback={stopPlayback}
+            showResults={showResults}
+            isPlaying={isPlaying}
+            midi={midi}
+            theme={theme}
+            setTheme={setTheme}
+            selectedSynthPreset={selectedSynthPreset}
+            setSelectedSynthPreset={setSelectedSynthPreset}
+            className="mb-4" 
+          /> {/* Added mb-4 for bottom margin */}
+          <FallingNotesCanvas canvasRef={canvasRef} height={220} />
+          {isClient && (
+            <div className="mb-8">
+              <Keyboard
+                keys={keys}
+                events={events}
+                currentIdx={currentIdx}
+                mode={mode}
+                keyRefs={keyRefs}
+                keyboardRef={keyboardRef}
+                pressedKeys={pressedKeys}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+        <div style={{ height: '2rem' }}></div>
+        <div>
+          <Score score={score} combo={combo} hits={hits} misses={misses} />
+        </div>
         <div className="mt-4">
           <small>Nota: este es un prototipo. Para mejorar: sincronizar tiempos MIDI reales, dibujar teclas negras sobre blancas correctamente (layout), mejores animaciones, persistencia de ranking, y tests de latencia.</small>
         </div>
