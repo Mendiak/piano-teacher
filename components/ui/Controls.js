@@ -31,7 +31,7 @@ export default function Controls({
       alignItems: 'flex-start',
       gap: '1.5rem', // Equivalent to gap-x-6 and gap-y-6
       padding: '1rem',
-      backgroundColor: '#1f2937', // bg-gray-800
+      backgroundColor: 'var(--controls-bg)',
       borderRadius: '0.75rem', // rounded-xl
       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', // shadow-lg
     }}>
@@ -41,8 +41,7 @@ export default function Controls({
           <FaMusic style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Canción:
         </label>
         <select
-          id="song-select"
-          style={{ backgroundColor: '#374151', color: 'white', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
+          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
           value={selectedSong}
           onChange={e => handleSongSelection(e.target.value)}
         >
@@ -68,7 +67,7 @@ export default function Controls({
         </label>
         <select
           id="mode-select"
-          style={{ backgroundColor: '#374151', color: 'white', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
+          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
           value={mode}
           onChange={e => setMode(e.target.value)}
         >
@@ -90,9 +89,9 @@ export default function Controls({
           step="0.1"
           value={tempoFactor}
           onChange={e => setTempoFactor(parseFloat(e.target.value))}
-          style={{ width: '100%', height: '0.5rem', backgroundColor: '#374151', borderRadius: '0.5rem', appearance: 'none', cursor: 'pointer', accentColor: 'var(--accent)' }}
+          style={{ width: '100%', height: '0.5rem', backgroundColor: 'var(--black-key)', borderRadius: '0.5rem', appearance: 'none', cursor: 'pointer', accentColor: 'var(--accent)' }}
         />
-        <span style={{ fontSize: '0.875rem', color: '#9ca3af' }}>{Math.round(tempoFactor * 100)}%</span>
+        <span style={{ fontSize: '0.875rem', color: 'var(--fg)' }}>{Math.round(tempoFactor * 100)}%</span>
       </div>
 
       {/* Theme Selection */}
@@ -102,7 +101,7 @@ export default function Controls({
         </label>
         <select
           id="theme-select"
-          style={{ backgroundColor: '#374151', color: 'white', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
+          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
           value={theme}
           onChange={e => setTheme(e.target.value)}
         >
@@ -119,7 +118,7 @@ export default function Controls({
         </label>
         <select
           id="synth-select"
-          style={{ backgroundColor: '#374151', color: 'white', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
+          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
           value={selectedSynthPreset}
           onChange={e => setSelectedSynthPreset(e.target.value)}
         >
@@ -134,20 +133,20 @@ export default function Controls({
         <button
           onClick={() => startPlayback()}
           disabled={isPlaying || !midi}
-          style={{ backgroundColor: 'var(--accent)', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', transitionProperty: 'background-color', transitionDuration: '200ms', opacity: (isPlaying || !midi) ? 0.5 : 1, cursor: (isPlaying || !midi) ? 'not-allowed' : 'pointer' }}
+          style={{ backgroundColor: 'var(--accent)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', transitionProperty: 'background-color', transitionDuration: '200ms', opacity: (isPlaying || !midi) ? 0.5 : 1, cursor: (isPlaying || !midi) ? 'not-allowed' : 'pointer' }}
         >
           <FaPlay style={{ marginRight: '0.5rem' }} /> Play
         </button>
         <button
           onClick={() => stopPlayback()}
           disabled={!isPlaying}
-          style={{ backgroundColor: '#4b5563', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', transitionProperty: 'background-color', transitionDuration: '200ms' }}
+          style={{ backgroundColor: 'var(--black-key)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', transitionProperty: 'background-color', transitionDuration: '200ms' }}
         >
           <FaStop style={{ marginRight: '0.5rem' }} /> Stop
         </button>
         <button
           onClick={() => showResults()}
-          style={{ backgroundColor: '#2563eb', color: 'white', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', transitionProperty: 'background-color', transitionDuration: '200ms' }}
+          style={{ backgroundColor: 'var(--accent)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', transitionProperty: 'background-color', transitionDuration: '200ms' }}
         >
           <FaChartBar style={{ marginRight: '0.5rem' }} /> Resultados
         </button>
