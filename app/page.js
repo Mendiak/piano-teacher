@@ -1,6 +1,6 @@
-import ClientWrapper from "../components/ClientWrapper";
+import PianoTeacherApp from "../components/PianoTeacherApp";
 
 
 export default function Page() {
-  return <ClientWrapper />;
+  return <PianoTeacherApp />;
 }
