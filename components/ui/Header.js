@@ -1,8 +1,8 @@
 'use client';
 
-import { FaSun, FaMoon } from 'react-icons/fa';
+import { FaSun, FaMoon, FaQuestionCircle } from 'react-icons/fa';
 
-export default function Header({ theme, setTheme, midiError, connectedInputs }) {
+export default function Header({ theme, setTheme, midiError, connectedInputs, onGuideClick }) {
   return (
     <>
       <style>{`
@@ -25,6 +25,28 @@ export default function Header({ theme, setTheme, midiError, connectedInputs }) 
               <span> No MIDI device detected.</span>
             )}
           </div>
+          <button
+            onClick={onGuideClick}
+            title="Mostrar Guía"
+            style={{
+              backgroundColor: 'var(--controls-bg)',
+              color: 'var(--fg)',
+              padding: '0.5rem',
+              borderRadius: '0.375rem',
+              outline: 'none',
+              borderWidth: '2px',
+              borderColor: 'transparent',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'transform 0.2s',
+              marginRight: '1rem',
+            }}
+            onMouseOver={e => e.currentTarget.style.transform = 'scale(1.1)'}
+            onMouseOut={e => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            <FaQuestionCircle size={18} />
+          </button>
           <button
             onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
             style={{

@@ -9,6 +9,8 @@ export function useScoring() {
   const [combo, setCombo] = useState(0);
   const [maxCombo, setMaxCombo] = useState(0);
   const [reactionTimes, setReactionTimes] = useState([]);
+  const [isResultsVisible, setIsResultsVisible] = useState(false);
+  const [results, setResults] = useState(null);
 
   const resetScore = useCallback(() => {
     setScore(0);
@@ -17,14 +19,21 @@ export function useScoring() {
     setCombo(0);
     setMaxCombo(0);
     setReactionTimes([]);
+    setIsResultsVisible(false);
+    setResults(null);
   }, []);
 
   const showResults = useCallback(() => {
     const total = hits + misses;
     const accuracy = (total === 0) ? 0 : Math.round((hits / total) * 100);
     const avgReaction = reactionTimes.length ? Math.round(reactionTimes.reduce((a, b) => a + b, 0) / reactionTimes.length) : 0;
-    alert(`Resultados:\nPuntuación: ${score}\nPrecisión: ${accuracy}%\nHits: ${hits}\nMisses: ${misses}\nCombo max: ${maxCombo}\nTiempo reacción medio: ${avgReaction}ms`);
+    setResults({ score, accuracy, hits, misses, maxCombo, avgReaction });
+    setIsResultsVisible(true);
   }, [score, hits, misses, maxCombo, reactionTimes]);
+
+  const hideResults = useCallback(() => {
+    setIsResultsVisible(false);
+  }, []);
 
   return {
     score, setScore,
@@ -35,5 +44,8 @@ export function useScoring() {
     reactionTimes, setReactionTimes,
     resetScore,
     showResults,
+    isResultsVisible,
+    hideResults,
+    results,
   };
 }

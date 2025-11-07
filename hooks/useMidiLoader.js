@@ -35,7 +35,7 @@ export function useMidiLoader(setMidi, setEvents, setCurrentIdx, resetScore, set
       setEvents([]);
     }
     else {
-      const midiData = midiLibrary[songKey]();
+      const midiData = midiLibrary[songKey];
       loadMidi(midiData);
     }
   }, [setSelectedSong, setMidi, setEvents, loadMidi]);

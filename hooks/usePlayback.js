@@ -46,6 +46,11 @@ export function usePlayback(
 
     Tone.Transport.start();
     setIsPlaying(true);
+
+    // Schedule stop after MIDI duration
+    Tone.Transport.scheduleOnce(() => {
+      Tone.Transport.stop();
+    }, midi.duration);
   }, [midi, synth, mode, events, tempoFactor, fallingNotesRef, keyPositionsRef, setIsPlaying, showResults]);
 
   const startPlayback = useCallback(async () => {
