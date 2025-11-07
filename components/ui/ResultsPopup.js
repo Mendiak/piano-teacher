@@ -43,7 +43,7 @@ export default function ResultsPopup({ score, accuracy, hits, misses, maxCombo, 
           onClick={onClose}
           style={{
             backgroundColor: 'var(--accent)',
-            color: 'var(--fg)',
+            color: 'white',
             padding: '0.75rem 1.5rem',
             borderRadius: '0.5rem',
             fontSize: '1rem',

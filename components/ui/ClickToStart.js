@@ -16,6 +16,8 @@ export default function ClickToStart({ onStart }) {
       <div style={{ textAlign: 'center' }}>
         <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Bienvenido a Piano Teacher</h2>
         <p style={{ marginBottom: '1rem' }}>Tu asistente personal para aprender a tocar el piano con tu teclado MIDI.</p>
+        <p style={{ marginBottom: '1rem' }}>La aplicación ha sido testeada y optimizada para Google Chrome y Mozilla Firefox.</p>
+        <p style={{ marginBottom: '1rem' }}>Asegúrate de aceptar los permisos de tu navegador para acceder a dispositivos MIDI.</p>
         <p style={{ marginBottom: '2rem' }}>Para comenzar tu experiencia musical, haz clic en el botón.</p>
         <button 
           onClick={onStart}
