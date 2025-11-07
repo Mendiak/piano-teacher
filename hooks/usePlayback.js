@@ -25,8 +25,6 @@ export function usePlayback(
     Tone.Transport.bpm.value = bpm * tempoFactor;
 
     const part = new Tone.Part((time, note) => {
-      synth.triggerAttackRelease(note.name, note.duration, time, note.velocity);
-
       if (mode === 'fall') {
         Tone.Draw.schedule(() => {
           const x = keyPositionsRef.current[note.midi];
@@ -34,6 +32,8 @@ export function usePlayback(
             fallingNotesRef.current.push({ midi: note.midi, x, y: -20, spawnTime: performance.now(), targetY: 180, duration: note.duration });
           }
         }, time);
+      } else {
+        synth.triggerAttackRelease(note.name, note.duration, time, note.velocity);
       }
     }, events).start(0);
 
@@ -51,7 +51,7 @@ export function usePlayback(
     Tone.Transport.scheduleOnce(() => {
       Tone.Transport.stop();
     }, midi.duration);
-  }, [midi, synth, mode, events, tempoFactor, fallingNotesRef, keyPositionsRef, setIsPlaying, showResults]);
+  }, [midi, mode, events, tempoFactor, fallingNotesRef, keyPositionsRef, setIsPlaying, showResults]);
 
   const startPlayback = useCallback(async () => {
     if (!midi || !synth) return;

@@ -33,7 +33,7 @@ export default function PianoTeacherApp(){
 
     await Tone.start();
     setIsAudioStarted(true);
-    console.log('Audio context started');
+
   };
   // Hooks for core functionalities
   const { midiAccess, connectedInputs, midiError } = useMidi();
@@ -89,13 +89,14 @@ export default function PianoTeacherApp(){
     setMaxCombo,
     setReactionTimes,
     setMisses,
-    playMidi,
-        setCurrentIdx
-      );
+    setCurrentIdx,
+    294,
+    60
+  );
 
 
-  useMidiInputHandler(midiAccess, setPressedKeys, handleUserNoteOn, playMidi);
-  useFallingNotesAnimation(canvasRef, fallingNotesRef, fallingReqRef, tempoFactor, fallingNoteColorRef);
+  useMidiInputHandler(midiAccess, setPressedKeys, handleUserNoteOn, playMidi, synth);
+  useFallingNotesAnimation(canvasRef, fallingNotesRef, fallingReqRef, tempoFactor, fallingNoteColorRef, 294, 60);
   const { startPlayback, stopPlayback } = usePlayback(
     midi,
     synth,
@@ -138,16 +139,28 @@ export default function PianoTeacherApp(){
     backgroundSize: "40px 40px, 40px 40px, 100% 100%",
     gap: '2rem',
   };
+  const mainAppRef = useRef(null);
+
+  const onToggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      mainAppRef.current.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   return (
     <>
       {!isAudioStarted && <ClickToStart onStart={handleStartAudio} />}
       <CountdownOverlay countdownValue={countdownValue} />
       {isResultsVisible && results && <ResultsPopup {...results} onClose={hideResults} />}
       {isGuideVisible && <GuidePopup onClose={hideGuide} />}
-      <div className="bg-bg text-fg min-h-screen p-4 flex flex-col items-center" style={mainContainerStyle}>
+      <div ref={mainAppRef} className="bg-bg text-fg min-h-screen p-4 flex flex-col items-center" style={mainContainerStyle}>
         <div style={pianoContainerStyle} className={`rounded-lg shadow-lg`}>
-        <div style={{ padding: '15px' }}>
-          <Header theme={theme} setTheme={setTheme} midiError={midiError} connectedInputs={connectedInputs} onGuideClick={showGuide} />
+        <div style={{ padding: '10px' }}>
+          <Header theme={theme} setTheme={setTheme} midiError={midiError} connectedInputs={connectedInputs} onGuideClick={showGuide} onToggleFullscreen={onToggleFullscreen} />
           {/* Controls component below the header, spanning full width */}
           <Controls
             selectedSong={selectedSong}
@@ -172,7 +185,7 @@ export default function PianoTeacherApp(){
             resetScore={resetScore}
             className="mb-4" 
           /> {/* Added mb-4 for bottom margin */}
-          <FallingNotesCanvas canvasRef={canvasRef} height={220} />
+          <FallingNotesCanvas canvasRef={canvasRef} height={354} />
           {isClient && (
             <div className="mb-8">
               <Keyboard

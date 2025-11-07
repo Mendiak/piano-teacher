@@ -1,18 +1,27 @@
-PS C:\Users\mikel\Desktop\VS Code\piano-web> npm run build
+Audio context started PianoTeacherApp.js:36:13
+Note On: 60 Velocity: 42 useMidiInputHandler.js:12:15
 
-> next-piano-teacher@1.0.0 build
-> next build
+handleUserNoteOn triggered with midiNote: 60 useNoteInputHandler.js:27:13
+Attempting to play note: 
+Object { midiNote: 60, noteName: "C4", synth: true }
+useNoteInputHandler.js:33:13
+GET
+http://localhost:3000/favicon.ico
+[HTTP/1.1 404 Not Found 0ms]
 
-   ▲ Next.js 15.5.3
-
-   Creating an optimized production build ...
- ✓ Compiled successfully in 9.1s
-
-Failed to compile.
-
-./components/ui/GuidePopup.js
-48:92  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
-48:106  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
-
-info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
-PS C:\Users\mikel\Desktop\VS Code\piano-web> 
+ * Tone.js v15.1.22 * Global.js:84:13
+Audio context started PianoTeacherApp.js:66:17
+Note On: 60 Velocity: 42 useMidiInputHandler.js:17:25
+handleUserNoteOn triggered with midiNote: 60 useNoteInputHandler.js:17:21
+Attempting to play note: 
+Object { midiNote: 60, noteName: "C4", synth: true }
+useNoteInputHandler.js:25:21
+Note Off: 60 Velocity: 0 useMidiInputHandler.js:23:25
+[Fast Refresh] rebuilding hot-reloader-app.js:197:29
+[Fast Refresh] done in 450ms report-hmr-latency.js:14:13
+[Fast Refresh] rebuilding hot-reloader-app.js:197:29
+[Fast Refresh] done in 429ms report-hmr-latency.js:14:13
+[Fast Refresh] rebuilding hot-reloader-app.js:197:29
+[Fast Refresh] done in 375ms report-hmr-latency.js:14:13
+[Fast Refresh] rebuilding hot-reloader-app.js:197:29
+[Fast Refresh] done in 373ms report-hmr-latency.js:14:13
