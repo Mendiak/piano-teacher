@@ -1,7 +1,5 @@
 'use client';
 
-import React from 'react';
-
 export default function Keyboard({ keys, events, currentIdx, mode, keyRefs, keyboardRef, pressedKeys = new Set() }) {
   function renderKeys() {
     const whiteKeys = [];

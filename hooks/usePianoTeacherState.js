@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { synthPresets } from '../components/synth-presets';
 
 export function usePianoTeacherState() {
   const [mode, setMode] = useState('step');
@@ -14,6 +15,14 @@ export function usePianoTeacherState() {
   const [selectedSynthPreset, setSelectedSynthPreset] = useState('default');
   const [pressedKeys, setPressedKeys] = useState(new Set());
   const [countdownValue, setCountdownValue] = useState(null); // null, 3, 2, 1, 'Go!'
+  const [adsr, setAdsr] = useState(synthPresets.default.options.envelope);
+
+  useEffect(() => {
+    const newPreset = synthPresets[selectedSynthPreset];
+    if (newPreset) {
+      setAdsr(newPreset.options.envelope);
+    }
+  }, [selectedSynthPreset]);
 
   return {
     mode, setMode,
@@ -27,5 +36,6 @@ export function usePianoTeacherState() {
     selectedSynthPreset, setSelectedSynthPreset,
     pressedKeys, setPressedKeys,
     countdownValue, setCountdownValue,
+    adsr, setAdsr,
   };
 }

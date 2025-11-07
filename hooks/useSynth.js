@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import * as Tone from 'tone';
 import { synthPresets } from '../components/synth-presets.js';
 
-export function useSynth(selectedSynthPreset) {
+export function useSynth(selectedSynthPreset, adsr) {
   const [synth, setSynth] = useState(null);
 
   useEffect(() => {
@@ -18,6 +18,12 @@ export function useSynth(selectedSynthPreset) {
       }
     };
   }, [selectedSynthPreset]);
+
+  useEffect(() => {
+    if (synth && adsr) {
+      synth.set({ envelope: adsr });
+    }
+  }, [synth, adsr]);
 
   return synth;
 }

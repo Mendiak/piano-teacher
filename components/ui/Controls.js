@@ -1,6 +1,24 @@
-import React from 'react';
-import { FaPlay, FaStop, FaChartBar, FaMusic, FaGamepad, FaTachometerAlt, FaPalette, FaSun, FaMoon } from 'react-icons/fa';
+import { useState } from 'react';
+import { FaPlay, FaStop, FaChartBar, FaMusic, FaGamepad, FaTachometerAlt, FaPalette, FaSun, FaMoon, FaWaveSquare, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { synthPresets } from '../synth-presets.js';
+
+const ADSRSlider = ({ name, value, onChange, min = 0, max = 1, step = 0.01 }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', width: '100%' }}>
+    <label htmlFor={`${name}-range`} style={{ fontSize: '0.875rem', color: 'var(--fg)', textTransform: 'capitalize' }}>
+      {name}: {Number(value).toFixed(2)}
+    </label>
+    <input
+      id={`${name}-range`}
+      type="range"
+      min={min}
+      max={max}
+      step={step}
+      value={value}
+      onChange={onChange}
+      style={{ width: '100%', height: '0.5rem', backgroundColor: 'var(--black-key)', borderRadius: '0.5rem', appearance: 'none', cursor: 'pointer', accentColor: 'var(--accent)' }}
+    />
+  </div>
+);
 
 export default function Controls({
   selectedSong,
@@ -20,7 +38,15 @@ export default function Controls({
   setTheme,
   selectedSynthPreset,
   setSelectedSynthPreset,
+  adsr,
+  setAdsr,
 }) {
+  const [isAdsrVisible, setIsAdsrVisible] = useState(false);
+
+  const handleAdsrChange = (param) => (e) => {
+    setAdsr(prev => ({ ...prev, [param]: parseFloat(e.target.value) }));
+  };
+
   return (
     <div style={{
       display: 'flex',
@@ -33,6 +59,7 @@ export default function Controls({
       backgroundColor: 'var(--controls-bg)',
       borderRadius: '0.75rem', // rounded-xl
       boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', // shadow-lg
+      fontFamily: 'Poppins, sans-serif',
     }}>
       {/* Song Selection */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '200px', flexGrow: 1 }}>
@@ -40,7 +67,7 @@ export default function Controls({
           <FaMusic style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Canción:
         </label>
         <select
-          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
+          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent', fontFamily: 'inherit' }}
           value={selectedSong}
           onChange={e => handleSongSelection(e.target.value)}
         >
@@ -53,7 +80,7 @@ export default function Controls({
           <input
             type="file"
             accept=".mid,.midi"
-            style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#d1d5db' }}
+            style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#d1d5db', fontFamily: 'inherit' }}
             onChange={e => { if (e.target.files.length) loadMidi(e.target.files[0]); }}
           />
         )}
@@ -66,7 +93,7 @@ export default function Controls({
         </label>
         <select
           id="mode-select"
-          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
+          style={{ backgroundColor: 'var(--black-key)', color: 'var(--fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent', fontFamily: 'inherit' }}
           value={mode}
           onChange={e => setMode(e.target.value)}
         >
@@ -93,46 +120,60 @@ export default function Controls({
         <span style={{ fontSize: '0.875rem', color: 'var(--fg)' }}>{Math.round(tempoFactor * 100)}%</span>
       </div>
 
-
-
-      {/* Synth Selection */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '150px', flexGrow: 1 }}>
-        <label htmlFor="synth-select" style={{ display: 'flex', alignItems: 'center', fontSize: '1.125rem', fontWeight: '600', color: 'var(--fg)' }}>
-          <FaMusic style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Sonido:
-        </label>
-        <select
-          id="synth-select"
-          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent' }}
-          value={selectedSynthPreset}
-          onChange={e => setSelectedSynthPreset(e.target.value)}
-        >
-          {Object.keys(synthPresets).map(presetKey => (
-            <option key={presetKey} value={presetKey}>{synthPresets[presetKey].name}</option>
-          ))}
-        </select>
+      {/* Synth Selection & ADSR */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: '200px', flexGrow: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <label htmlFor="synth-select" style={{ display: 'flex', alignItems: 'center', fontSize: '1.125rem', fontWeight: '600', color: 'var(--fg)' }}>
+            <FaMusic style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Sonido:
+          </label>
+          <select
+            id="synth-select"
+            style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent', fontFamily: 'inherit' }}
+            value={selectedSynthPreset}
+            onChange={e => setSelectedSynthPreset(e.target.value)}
+          >
+            {Object.keys(synthPresets).map(presetKey => (
+              <option key={presetKey} value={presetKey}>{synthPresets[presetKey].name}</option>
+            ))}
+          </select>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            <button onClick={() => setIsAdsrVisible(!isAdsrVisible)} style={{ background: 'none', border: 'none', color: 'var(--fg)', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '1.125rem', fontWeight: '600', padding: 0 }}>
+              <FaWaveSquare style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Envolvente (ADSR)
+              {isAdsrVisible ? <FaChevronUp style={{ marginLeft: '0.5rem' }} /> : <FaChevronDown style={{ marginLeft: '0.5rem' }} />}
+            </button>
+            {isAdsrVisible && (
+              <>
+                <ADSRSlider name="attack" value={adsr.attack} onChange={handleAdsrChange('attack')} max={2} />
+                <ADSRSlider name="decay" value={adsr.decay} onChange={handleAdsrChange('decay')} max={2} />
+                <ADSRSlider name="sustain" value={adsr.sustain} onChange={handleAdsrChange('sustain')} max={1} />
+                <ADSRSlider name="release" value={adsr.release} onChange={handleAdsrChange('release')} max={5} />
+              </>
+            )}
+        </div>
       </div>
 
       {/* Playback Buttons */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem', minWidth: '200px', flexGrow: 1 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginTop: '1rem', minWidth: '200px', flexGrow: 1 }}>
         <button
           onClick={() => startPlayback()}
           disabled={isPlaying || !midi}
-          style={{ backgroundColor: 'var(--accent)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', transitionProperty: 'background-color', transitionDuration: '200ms', opacity: (isPlaying || !midi) ? 0.5 : 1, cursor: (isPlaying || !midi) ? 'not-allowed' : 'pointer' }}
+          style={{ color: 'var(--accent)', padding: '0.75rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', transitionProperty: 'all', transitionDuration: '200ms', opacity: (isPlaying || !midi) ? 0.5 : 1, cursor: (isPlaying || !midi) ? 'not-allowed' : 'pointer', background: 'none', border: '1px solid var(--accent)', '&:hover': { backgroundColor: 'var(--accent)', color: 'var(--bg)' } }}
         >
-          <FaPlay style={{ marginRight: '0.5rem' }} /> Play
+          <FaPlay />
         </button>
         <button
           onClick={() => stopPlayback()}
           disabled={!isPlaying}
-          style={{ backgroundColor: 'var(--black-key)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', transitionProperty: 'background-color', transitionDuration: '200ms' }}
+          style={{ color: 'var(--fg)', padding: '0.75rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', transitionProperty: 'all', transitionDuration: '200ms', background: 'none', border: '1px solid var(--fg)', opacity: !isPlaying ? 0.5 : 1, cursor: !isPlaying ? 'not-allowed' : 'pointer', '&:hover': { backgroundColor: 'var(--fg)', color: 'var(--bg)' } }}
         >
-          <FaStop style={{ marginRight: '0.5rem' }} /> Stop
+          <FaStop />
         </button>
         <button
           onClick={() => showResults()}
-          style={{ backgroundColor: 'var(--accent)', color: 'var(--fg)', padding: '0.5rem 1rem', borderRadius: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.125rem', fontWeight: 'bold', transitionProperty: 'background-color', transitionDuration: '200ms' }}
+          style={{ color: 'var(--accent)', padding: '0.75rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', transitionProperty: 'all', transitionDuration: '200ms', background: 'none', border: '1px solid var(--accent)', '&:hover': { backgroundColor: 'var(--accent)', color: 'var(--bg)' } }}
         >
-          <FaChartBar style={{ marginRight: '0.5rem' }} /> Resultados
+          <FaChartBar />
         </button>
       </div>
     </div>

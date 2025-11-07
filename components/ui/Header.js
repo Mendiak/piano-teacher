@@ -1,6 +1,5 @@
 'use client';
 
-import React from 'react';
 import { FaSun, FaMoon } from 'react-icons/fa';
 
 export default function Header({ theme, setTheme, midiError, connectedInputs }) {

@@ -43,6 +43,7 @@ export default function PianoTeacherApp(){
     selectedSynthPreset, setSelectedSynthPreset,
     pressedKeys, setPressedKeys,
     countdownValue, setCountdownValue,
+    adsr, setAdsr,
   } = usePianoTeacherState();
   const {
     canvasRef,
@@ -58,7 +59,7 @@ export default function PianoTeacherApp(){
   useIsClient(setIsClient);
 
   // Derived state and related hooks
-  const synth = useSynth(selectedSynthPreset);
+  const synth = useSynth(selectedSynthPreset, adsr);
   // eslint-disable-next-line no-unused-vars
   const { score, setScore, hits, setHits, misses, setMisses, combo, setCombo, maxCombo, setMaxCombo, reactionTimes, setReactionTimes, resetScore, showResults } = useScoring();
   const fallingNoteColorRef = useRef('#7c3aed');
@@ -106,12 +107,29 @@ export default function PianoTeacherApp(){
     backgroundColor: theme === 'light' ? '#e8e8e8' : '#3a3a3a'
   };
 
+  const mainContainerStyle = {
+    position: 'relative',
+    backgroundColor: theme === 'light' ? 'white' : 'var(--bg)',
+    backgroundImage: theme === 'light'
+      ? `
+        linear-gradient(to right, rgba(71,85,105,0.15) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(71,85,105,0.15) 1px, transparent 1px),
+        radial-gradient(circle at 50% 60%, rgba(236,72,153,0.15) 0%, rgba(168,85,247,0.05) 40%, transparent 70%)
+      `
+      : `
+        linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        radial-gradient(circle at 50% 60%, rgba(236,72,153,0.1) 0%, rgba(168,85,247,0.05) 40%, transparent 70%)
+      `,
+    backgroundSize: "40px 40px, 40px 40px, 100% 100%",
+  };
+
   return (
     <>
       <CountdownOverlay countdownValue={countdownValue} />
-      <div className="bg-bg text-fg min-h-screen p-4 flex flex-col items-center">
-      <div style={pianoContainerStyle} className={`rounded-lg shadow-lg`}>
-        <div style={{ padding: '50px' }}>
+      <div className="bg-bg text-fg min-h-screen p-4 flex flex-col items-center" style={mainContainerStyle}>
+        <div style={pianoContainerStyle} className={`rounded-lg shadow-lg`}>
+        <div style={{ padding: '15px' }}>
           <Header theme={theme} setTheme={setTheme} midiError={midiError} connectedInputs={connectedInputs} />
           {/* Controls component below the header, spanning full width */}
           <Controls
@@ -132,6 +150,8 @@ export default function PianoTeacherApp(){
             setTheme={setTheme}
             selectedSynthPreset={selectedSynthPreset}
             setSelectedSynthPreset={setSelectedSynthPreset}
+            adsr={adsr}
+            setAdsr={setAdsr}
             className="mb-4" 
           /> {/* Added mb-4 for bottom margin */}
           <FallingNotesCanvas canvasRef={canvasRef} height={220} />
@@ -154,9 +174,12 @@ export default function PianoTeacherApp(){
         <div>
           <Score score={score} combo={combo} hits={hits} misses={misses} />
         </div>
-        <div className="mt-4">
-          <small>Nota: este es un prototipo. Para mejorar: sincronizar tiempos MIDI reales, dibujar teclas negras sobre blancas correctamente (layout), mejores animaciones, persistencia de ranking, y tests de latencia.</small>
-        </div>
+        <footer style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.875rem', color: 'var(--fg)' }}>
+          <p>
+            Website By <a href="https://mendiak.github.io/portfolio/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', textDecoration: 'none' }}>Mikel Aramendia</a>
+          </p>
+          <p>&copy; {new Date().getFullYear()} Piano Teacher App</p>
+        </footer>
       </div>
     </>
   );

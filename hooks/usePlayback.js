@@ -66,10 +66,12 @@ export function usePlayback(
           _startTonePlayback(); // Start actual playback after countdown
         }
       }, 1000);
+    } else if (mode === 'step') {
+      setIsPlaying(true);
     } else {
-      _startTonePlayback(); // For other modes, start immediately
+      _startTonePlayback();
     }
-  }, [midi, synth, mode, setCountdownValue, _startTonePlayback]);
+  }, [midi, synth, mode, setCountdownValue, _startTonePlayback, setIsPlaying]);
 
   const stopPlayback = useCallback(() => {
     Tone.Transport.stop();

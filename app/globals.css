@@ -59,9 +59,16 @@ h1 {
   /* left property will be set inline in JS */
 }
 
+@keyframes blink {
+  50% {
+    opacity: 0.5;
+  }
+}
+
 .key.highlight-melody {
   background: var(--note-color); /* Change background to note color */
   color: var(--fg); /* Ensure text color is visible on note background */
+  animation: blink 1s linear infinite;
 }
 
 .key.highlight-pressed {
