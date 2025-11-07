@@ -39,13 +39,13 @@ export default function GuidePopup({ onClose }) {
         </p>
 
         <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: '1.5rem', marginBottom: '0.5rem' }}>Funcionalidades Principales</h3>
-        <p><strong>Selección de Canción:</strong> Elige una canción de la lista o sube tu propio archivo MIDI (.mid) seleccionando "Subir MIDI propio".</p>
+        <p><strong>Selección de Canción:</strong> Elige una canción de la lista o sube tu propio archivo MIDI (.mid) seleccionando &quot;Subir MIDI propio&quot;.</p>
         <p><strong>Modo de Juego:</strong></p>
         <ul>
-          <li><strong>Paso a paso:</strong> Las notas no avanzan hasta que toques la nota correcta. Ideal para aprender la melodía a tu propio ritmo.</li>
-          <li><strong>Falling notes:</strong> Las notas caen a una velocidad constante. ¡Intenta tocarlas en el momento justo!</li>
+          <li><strong>&quot;Paso a paso:&quot;</strong> Las notas no avanzan hasta que toques la nota correcta. Ideal para aprender la melodía a tu propio ritmo.</li>
+          <li><strong>&quot;Falling notes:&quot;</strong> Las notas caen a una velocidad constante. ¡Intenta tocarlas en el momento justo!</li>
         </ul>
-        <p><strong>Control de Tempo:</strong> Ajusta la velocidad de la canción en el modo "Falling notes".</p>
+        <p><strong>Control de Tempo:</strong> Ajusta la velocidad de la canción en el modo &quot;Falling notes&quot;.</p>
         <p><strong>Sonido:</strong> Elige entre diferentes sonidos de sintetizador para el piano.</p>
         <p><strong>Envolvente (ADSR):</strong> Personaliza el sonido del sintetizador ajustando el Ataque, Decaimiento, Sostenido y Relajación.</p>
 

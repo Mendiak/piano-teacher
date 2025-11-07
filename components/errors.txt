@@ -1,0 +1,18 @@
+PS C:\Users\mikel\Desktop\VS Code\piano-web> npm run build
+
+> next-piano-teacher@1.0.0 build
+> next build
+
+   ▲ Next.js 15.5.3
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 9.1s
+
+Failed to compile.
+
+./components/ui/GuidePopup.js
+48:92  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+48:106  Error: `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`.  react/no-unescaped-entities
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+PS C:\Users\mikel\Desktop\VS Code\piano-web> 

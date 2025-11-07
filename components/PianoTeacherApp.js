@@ -164,7 +164,7 @@ export default function PianoTeacherApp(){
   // eslint-disable-next-line no-unused-vars
 
 
-  const { score, setScore, hits, setHits, misses, setMisses, combo, setCombo, maxCombo, setMaxCombo, reactionTimes, setReactionTimes, resetScore, showResults, isResultsVisible, hideResults, results } = useScoring();
+  const { setScore, setHits, setMisses, combo, setCombo, setMaxCombo, setReactionTimes, resetScore, showResults, isResultsVisible, hideResults, results } = useScoring();
 
 
   const fallingNoteColorRef = useRef('#7c3aed');
@@ -302,10 +302,7 @@ export default function PianoTeacherApp(){
     }
 
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-
-
-  }, []);
+    }, [selectedSong, midiLibrary, loadMidi]);
 
 
 
