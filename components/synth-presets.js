@@ -1,11 +1,10 @@
-
-
 export const synthPresets = {
   default: {
     name: 'Default Piano',
     options: {
-      oscillator: { type: 'triangle' },
-      envelope: { attack: 0.02, decay: 0.1, sustain: 0, release: 0.05 },
+      oscillator: { type: 'sine' },
+      envelope: { attack: 0.04, decay: 0.6, sustain: 0.1, release: 0.7 },
+      volume: -10,
     },
   },
   epiano: {

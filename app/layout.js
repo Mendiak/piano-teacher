@@ -10,6 +10,14 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <meta name="google-site-verification" content="YQRsFuAu9kLLD9W473-R49ZQyvsYI7rhe6cfmgxsOvs" />
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-JY3TPFQHM4"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', 'G-JY3TPFQHM4');
+        </script>
       </head>
       <body>{children}</body>
     </html>
