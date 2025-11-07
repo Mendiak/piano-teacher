@@ -1,4 +1,5 @@
 import './globals.css';
+import ScreenSizeWarning from '../components/ui/ScreenSizeWarning';
 
 export const metadata = {
   title: 'Piano Teacher App',
@@ -23,7 +24,11 @@ export default function RootLayout({ children }) {
           }}
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <ScreenSizeWarning>
+          {children}
+        </ScreenSizeWarning>
+      </body>
     </html>
   );
 }
