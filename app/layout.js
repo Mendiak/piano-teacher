@@ -11,13 +11,17 @@ export default function RootLayout({ children }) {
       <head>
         <meta name="google-site-verification" content="YQRsFuAu9kLLD9W473-R49ZQyvsYI7rhe6cfmgxsOvs" />
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-JY3TPFQHM4"></script>
-        <script>
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
 
-          gtag('config', 'G-JY3TPFQHM4');
-        </script>
+              gtag('config', 'G-JY3TPFQHM4');
+            `,
+          }}
+        />
       </head>
       <body>{children}</body>
     </html>
