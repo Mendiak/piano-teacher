@@ -145,7 +145,10 @@ export default function PianoTeacherApp(){
   const showGuide = () => setIsGuideVisible(true);
   const hideGuide = () => setIsGuideVisible(false);
   const pianoContainerStyle = {
-    backgroundColor: theme === 'light' ? '#e8e8e8' : '#3a3a3a'
+    backgroundColor: theme === 'light' ? '#e8e8e8' : '#3a3a3a',
+    boxShadow: theme === 'light'
+      ? '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15)' // Darker shadow for light theme
+      : '0 10px 15px -3px rgba(255, 255, 255, 0.1), 0 4px 6px -2px rgba(255, 255, 255, 0.05)' // Lighter shadow for dark theme
   };
   const mainContainerStyle = {
     position: 'relative',
@@ -187,9 +190,9 @@ export default function PianoTeacherApp(){
   return (
     <>
       {!isAudioStarted && <ClickToStart onStart={handleStartAudio} />}
-      <div ref={mainAppRef} className="bg-bg text-fg min-h-screen p-4 flex flex-col items-center" style={mainContainerStyle}>
+      <div ref={mainAppRef} className="bg-bg text-fg min-h-screen p-4 flex flex-col items-center justify-center" style={mainContainerStyle}>
         <CountdownOverlay countdownValue={countdownValue} />
-        <div style={pianoContainerStyle} className={`rounded-lg shadow-lg`}>
+        <div style={pianoContainerStyle} className={`rounded-lg shadow-2xl`}>
         <div style={{ padding: '10px' }}>
           <Header theme={theme} setTheme={setTheme} midiError={midiError} connectedInputs={connectedInputs} onGuideClick={showGuide} onToggleFullscreen={onToggleFullscreen} />
           {/* Controls component below the header, spanning full width */}
@@ -242,7 +245,7 @@ export default function PianoTeacherApp(){
           </p>
         </footer>
         {isResultsVisible && <ResultsPopup results={results} onClose={hideResults} />}
-        {isGuideVisible && <GuidePopup hideGuide={hideGuide} />}
+        {isGuideVisible && <GuidePopup onClose={hideGuide} />}
       </div>
     </>
   );

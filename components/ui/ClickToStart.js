@@ -6,7 +6,8 @@ export default function ClickToStart({ onStart }) {
       left: 0,
       width: '100%',
       height: '100%',
-      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)', // Reduced opacity
+      backdropFilter: 'blur(10px)', // Increased blur for better visibility
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
