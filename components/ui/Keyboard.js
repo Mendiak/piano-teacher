@@ -1,14 +1,15 @@
 'use client';
 
-export default function Keyboard({ keys, events, currentIdx, mode, keyRefs, keyboardRef, pressedKeys = new Set() }) {
-  function renderKeys() {
+export default function Keyboard({ keys, events, currentIdx, mode, keyRefs, keyboardRef, pressedKeys = new Set(), isAutoPlaying }) {
+  function renderKeys(isAutoPlaying) {
     const whiteKeys = [];
     const blackKeys = [];
 
     keys.forEach(k => {
       const isBlack = k.note.includes('#');
       let isMelodyHighlighted = false;
-      if (mode === 'step' && events[currentIdx] && events[currentIdx].midi === k.midi) {
+      // Only highlight melody in step mode if not auto-playing
+      if (!isAutoPlaying && mode === 'step' && events[currentIdx] && events[currentIdx].midi === k.midi) {
         isMelodyHighlighted = true;
       }
 
@@ -35,25 +36,25 @@ export default function Keyboard({ keys, events, currentIdx, mode, keyRefs, keyb
 
         switch (noteInOctave) {
           case 1: // C#
-            leftOffset = 52; 
+            leftOffset = 19; 
             break;
           case 3: // D#
-            leftOffset = 132; 
+            leftOffset = 49; 
             break;
           case 6: // F#
-            leftOffset = 292; 
+            leftOffset = 109; 
             break;
           case 8: // G#
-            leftOffset = 372; 
+            leftOffset = 139; 
             break;
           case 10: // A#
-            leftOffset = 452; 
+            leftOffset = 169; 
             break;
           default:
             break;
         }
         // Adjust for octave
-        leftOffset += (octave - Math.floor(keys[0].midi / 12)) * (7 * 80); 
+        leftOffset += (octave - Math.floor(keys[0].midi / 12)) * (7 * 30); 
 
         blackKeys.push(
           <div 
@@ -62,7 +63,6 @@ export default function Keyboard({ keys, events, currentIdx, mode, keyRefs, keyb
             className={`${baseKeyClasses} black`}
             style={{ left: `${leftOffset}px` }}
           >
-            <span className="text-xs">{k.note}</span>
           </div>
         );
       } else {
@@ -88,7 +88,7 @@ export default function Keyboard({ keys, events, currentIdx, mode, keyRefs, keyb
 
   return (
     <div className="keyboard flex select-none" aria-hidden="true" ref={keyboardRef}>
-      {renderKeys()}
+      {renderKeys(isAutoPlaying)}
     </div>
   );
 }

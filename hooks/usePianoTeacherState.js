@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { synthPresets } from '../components/synth-presets';
-import { midiLibrary } from '../components/midi-library';
 
 export function usePianoTeacherState() {
   const [mode, setMode] = useState('step');
@@ -11,12 +10,14 @@ export function usePianoTeacherState() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [tempoFactor, setTempoFactor] = useState(1);
-  const [selectedSong, setSelectedSong] = useState(Object.keys(midiLibrary)[0]);
+  const [selectedSong, setSelectedSong] = useState(null); // Initialize to null
   const [theme, setTheme] = useState('light');
   const [selectedSynthPreset, setSelectedSynthPreset] = useState('default');
   const [pressedKeys, setPressedKeys] = useState(new Set());
   const [countdownValue, setCountdownValue] = useState(null); // null, 3, 2, 1, 'Go!'
   const [adsr, setAdsr] = useState(synthPresets.default.options.envelope);
+  const [actualMidiDuration, setActualMidiDuration] = useState(0); // New state for actual MIDI duration
+  const [isAutoPlaying, setIsAutoPlaying] = useState(false); // New state for auto-play mode
 
   useEffect(() => {
     const newPreset = synthPresets[selectedSynthPreset];
@@ -38,5 +39,7 @@ export function usePianoTeacherState() {
     pressedKeys, setPressedKeys,
     countdownValue, setCountdownValue,
     adsr, setAdsr,
+    actualMidiDuration, setActualMidiDuration, // Return new state
+    isAutoPlaying, setIsAutoPlaying, // Return new state
   };
 }

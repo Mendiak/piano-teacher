@@ -2,10 +2,14 @@
 
 import { useCallback } from 'react';
 import { Midi } from '@tonejs/midi';
-import { midiLibrary } from '../components/midi-library.js';
 
-export function useMidiLoader(setMidi, setEvents, setCurrentIdx, resetScore, setSelectedSong) {
 
+const availableSongs = [
+  { name: 'Beethoven - Moonlight Sonata', file: 'Beethoven-Moonlight-Sonata.mid' },
+  { name: 'Mozart - Fur Elise', file: 'Mozart-Fur-Elise.mid' },
+];
+
+export function useMidiLoader(setMidi, setEvents, setCurrentIdx, resetScore, setSelectedSong, setActualMidiDuration) {
   const loadMidi = useCallback(async (fileOrMidi) => {
     let parsedMidi;
     if (fileOrMidi instanceof File) {
@@ -23,22 +27,47 @@ export function useMidiLoader(setMidi, setEvents, setCurrentIdx, resetScore, set
     setMidi(parsedMidi);
     const notes = parsedMidi.tracks.flatMap(track => track.notes);
     notes.sort((a, b) => a.time - b.time);
+
+    // Calculate the actual duration based on the last note's end time
+    let actualMidiDuration = parsedMidi.duration; // Start with Tone.js's duration
+    if (notes.length > 0) {
+      const lastNote = notes[notes.length - 1];
+      const lastNoteEndTime = lastNote.time + lastNote.duration;
+      if (lastNoteEndTime > actualMidiDuration) {
+        actualMidiDuration = lastNoteEndTime;
+      }
+    }
+    // We cannot set parsedMidi.duration as it's a getter-only property.
+    // Instead, we will pass this actualMidiDuration to the state.
+    setActualMidiDuration(actualMidiDuration); // Set the calculated duration in state
+
     setEvents(notes);
     setCurrentIdx(0);
     resetScore();
-  }, [setMidi, setEvents, setCurrentIdx, resetScore]);
+  }, [setMidi, setEvents, setCurrentIdx, resetScore, setActualMidiDuration]); // Added setActualMidiDuration to dependencies
 
-  const handleSongSelection = useCallback((songKey) => {
+  const handleSongSelection = useCallback(async (songKey) => {
     setSelectedSong(songKey);
     if (songKey === 'custom') {
       setMidi(null);
       setEvents([]);
+      setActualMidiDuration(0); // Reset duration for custom
     }
     else {
-      const midiData = midiLibrary[songKey];
-      loadMidi(midiData);
+      const song = availableSongs.find(s => s.name === songKey);
+      if (song) {
+        try {
+          const response = await fetch(`/midi/${song.file}`);
+          const arrayBuffer = await response.arrayBuffer();
+          const parsedMidi = new Midi(arrayBuffer);
+          loadMidi(parsedMidi);
+        } catch (error) {
+          console.error('Failed to load MIDI file:', error);
+          // Handle error, e.g., show a message to the user
+        }
+      }
     }
-  }, [setSelectedSong, setMidi, setEvents, loadMidi]);
+  }, [setSelectedSong, setMidi, setEvents, loadMidi, setActualMidiDuration]); // Added setActualMidiDuration to dependencies
 
-  return { loadMidi, handleSongSelection, midiLibrary };
+  return { loadMidi, handleSongSelection, availableSongs };
 }

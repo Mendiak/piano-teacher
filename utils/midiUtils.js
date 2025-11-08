@@ -13,8 +13,8 @@ const generateKeyboardKeys = (firstMidi, lastMidi) => {
 };
 
 const getKeyboardConfig = () => {
-  const firstMidi = 48; // C3
-  const lastMidi = 72;  // C5
+  const firstMidi = 24; // C1
+  const lastMidi = 108;  // C8
   const keys = generateKeyboardKeys(firstMidi, lastMidi);
   return { firstMidi, lastMidi, keys };
 };

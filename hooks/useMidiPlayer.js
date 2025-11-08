@@ -2,8 +2,13 @@
 
 import { useCallback } from 'react';
 import * as Tone from 'tone';
-import { MIDI_TO_NOTE } from '../utils/midiUtils.js';
 
 export function useMidiPlayer(synth) {
-  return {  };
+  const playMidi = useCallback((note, time, duration) => {
+    if (synth && note) {
+      synth.triggerAttackRelease(Tone.Midi(note).toNote(), duration, time);
+    }
+  }, [synth]);
+
+  return { playMidi };
 }
