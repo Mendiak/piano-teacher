@@ -19,12 +19,8 @@ export function useNoteInputHandler(
   setMaxCombo,
   setReactionTimes,
   setMisses,
-  setCurrentIdx,
-  targetZoneY,
-  targetZoneHeight
+  setCurrentIdx
 ) {
-  const activeNotesRef = useRef(new Set());
-  // Nuevo ref para rastrear la nota actual
   const currentNoteRef = useRef(null);
 
   const handleUserNoteOn = useCallback((midiNote, velocity = 0) => {
@@ -50,7 +46,6 @@ export function useNoteInputHandler(
         }
 
         const expectedMidi = expected.midi;
-        const now = performance.now();
 
         if (midiNote === expectedMidi) {
           currentNoteRef.current = midiNote;

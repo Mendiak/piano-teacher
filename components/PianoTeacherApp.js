@@ -13,7 +13,6 @@ import { useKeyboardCanvasSync } from '../hooks/useKeyboardCanvasSync.js';
 import { useMidi } from '../hooks/useMidi.js';
 import { useMidiInputHandler } from '../hooks/useMidiInputHandler.js';
 import { useMidiLoader } from '../hooks/useMidiLoader.js';
-import { useMidiPlayer } from '../hooks/useMidiPlayer.js';
 import { useNoteInputHandler } from '../hooks/useNoteInputHandler.js';
 import { usePianoTeacherRefs } from '../hooks/usePianoTeacherRefs.js';
 import { usePianoTeacherState } from '../hooks/usePianoTeacherState.js';
@@ -64,7 +63,6 @@ export default function PianoTeacherApp(){
   const [isMidiFinished, setIsMidiFinished] = useState(false);
   const [activeFallingNotesCount, setActiveFallingNotesCount] = useState(0);
   const [fallingNotes, setFallingNotes] = useState([]); // New state for falling notes
-  const [expectedMidiNote, setExpectedMidiNote] = useState(null); // New state for expected MIDI note
   const [isClient, setIsClient] = useState(false);
   useIsClient(setIsClient);
   // Derived state and related hooks
@@ -83,7 +81,6 @@ export default function PianoTeacherApp(){
   const { keys } = getKeyboardConfig();
   useKeyboardCanvasSync(keyboardRef, canvasRef, keys, keyRefs, keyPositionsRef);
   // Action-related hooks
-  const { playMidi } = useMidiPlayer(synth);
   const { loadMidi, handleSongSelection, availableSongs } = useMidiLoader(setMidi, setEvents, setCurrentIdx, resetScore, setSelectedSong, setActualMidiDuration);
   const { handleUserNoteOn } = useNoteInputHandler(
     events,
@@ -206,7 +203,6 @@ export default function PianoTeacherApp(){
             tempoFactor={tempoFactor}
             setTempoFactor={setTempoFactor}
             startPlayback={startPlayback}
-            stopPlayback={stopPlayback}
             restartSong={restartSong} // New prop
             showResults={showResults}
             isPlaying={isPlaying}

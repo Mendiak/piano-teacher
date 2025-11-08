@@ -39,7 +39,6 @@ export default function Controls({
   setSelectedSynthPreset,
   adsr,
   setAdsr,
-  resetScore,
   isAutoPlaying,
   setIsAutoPlaying,
 }) {
