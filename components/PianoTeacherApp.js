@@ -59,7 +59,6 @@ export default function PianoTeacherApp(){
     keyboardRef,
     keyRefs,
     keyPositionsRef,
-    fallingReqRef,
     lastNoteTimeRef,
   } = usePianoTeacherRefs();
   const [isMidiFinished, setIsMidiFinished] = useState(false);
@@ -83,7 +82,7 @@ export default function PianoTeacherApp(){
   const { keys } = getKeyboardConfig();
   useKeyboardCanvasSync(keyboardRef, canvasRef, keys, keyRefs, keyPositionsRef);
   // Action-related hooks
-  const { loadMidi, handleSongSelection, availableSongs } = useMidiLoader(setMidi, setEvents, setCurrentIdx, resetScore, setSelectedSong, setActualMidiDuration);
+  const { handleSongSelection, availableSongs } = useMidiLoader(setMidi, setEvents, setCurrentIdx, resetScore, setSelectedSong, setActualMidiDuration);
   const { handleUserNoteOn } = useNoteInputHandler(
     events,
     currentIdx,
@@ -197,13 +196,12 @@ export default function PianoTeacherApp(){
         <CountdownOverlay countdownValue={countdownValue} />
         <div style={pianoContainerStyle} className={`rounded-lg shadow-2xl`}>
         <div style={{ padding: '10px' }}>
-          <Header theme={theme} setTheme={setTheme} midiError={midiError} connectedInputs={connectedInputs} onGuideClick={showGuide} onToggleFullscreen={onToggleFullscreen} octave={octave} />
+          <Header theme={theme} setTheme={setTheme} midiError={midiError} connectedInputs={connectedInputs} onGuideClick={showGuide} onToggleFullscreen={onToggleFullscreen} />
           {/* Controls component below the header, spanning full width */}
           <Controls
             selectedSong={selectedSong}
             handleSongSelection={handleSongSelection}
             availableSongs={availableSongs}
-            loadMidi={loadMidi}
             mode={mode}
             setMode={setMode}
             tempoFactor={tempoFactor}

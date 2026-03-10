@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { 
   FaPlay, FaStop, FaChartBar, FaMusic, FaGamepad, 
-  FaTachometerAlt, FaWaveSquare, FaChevronDown, 
-  FaChevronUp, FaSync, FaKeyboard, FaMagic 
+  FaTachometerAlt, FaWaveSquare, FaSync, FaKeyboard, FaMagic 
 } from 'react-icons/fa';
 import { synthPresets } from '../synth-presets.js';
 
@@ -39,7 +38,6 @@ export default function Controls({
   selectedSong,
   handleSongSelection,
   availableSongs,
-  loadMidi,
   mode,
   setMode,
   tempoFactor,

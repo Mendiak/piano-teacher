@@ -42,7 +42,7 @@ export default function GuidePopup({ onClose }) {
         <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: '1.5rem', marginBottom: '0.5rem' }}>Teclado del Ordenador</h3>
         <p>
           Si no tienes un teclado MIDI, puedes usar el teclado de tu ordenador:<br />
-          - **Notas blancas:** Teclas `A` `S` `D` `F` `G` `H` `J` `K` `L` `;` `'`<br />
+          - **Notas blancas:** Teclas `A` `S` `D` `F` `G` `H` `J` `K` `L` `;` `&apos;`<br />
           - **Notas negras:** Teclas `W` `E` `T` `Y` `U` `O` `P`<br />
           - **Cambiar octava:** Teclas `Z` (bajar) y `X` (subir)
         </p>
