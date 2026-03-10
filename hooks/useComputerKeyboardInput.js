@@ -27,8 +27,7 @@ const KEY_RELATIVE_MAP = {
   'p': 15, // D# (+1 Oct)
 };
 
-export function useComputerKeyboardInput(setPressedKeys, handleUserNoteOn) {
-  const [octave, setOctave] = useState(3); // Start at Octave 3 (C3 = 48)
+export function useComputerKeyboardInput(setPressedKeys, handleUserNoteOn, octave, setOctave) {
   const activeKeys = useRef(new Map()); // Map key -> midiNote
 
   useEffect(() => {
@@ -93,7 +92,5 @@ export function useComputerKeyboardInput(setPressedKeys, handleUserNoteOn) {
       window.removeEventListener('keydown', onKeyDown);
       window.removeEventListener('keyup', onKeyUp);
     };
-  }, [octave, setPressedKeys, handleUserNoteOn]);
-
-  return { octave };
+  }, [octave, setPressedKeys, handleUserNoteOn, setOctave]);
 }

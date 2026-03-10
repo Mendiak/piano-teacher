@@ -72,8 +72,28 @@ h1 {
 }
 
 .key.highlight-pressed {
-  background: var(--pressed-key-color); /* Change background to pressed key color */
-  color: var(--fg); /* Ensure text color is visible on pressed key background */
+  background: var(--accent) !important;
+  box-shadow: 0 0 15px var(--accent);
+}
+
+.key-label-white {
+  font-weight: 800;
+  font-size: 14px;
+  color: var(--accent);
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
+.key-label-black {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: 800;
+  font-size: 11px;
+  color: white;
+  opacity: 0.8;
+  pointer-events: none;
 }
 
 .canvas-wrap {

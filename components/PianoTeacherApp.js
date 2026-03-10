@@ -7,7 +7,6 @@ import Controls from './ui/Controls.js';
 import FallingNotesCanvas from './ui/FallingNotesCanvas.js';
 import Header from './ui/Header.js';
 import Keyboard from './ui/Keyboard.js';
-import { useFallingNotesAnimation } from '../hooks/useFallingNotesAnimation.js';
 import { useIsClient } from '../hooks/useIsClient.js';
 import { useKeyboardCanvasSync } from '../hooks/useKeyboardCanvasSync.js';
 import { useMidi } from '../hooks/useMidi.js';
@@ -52,6 +51,8 @@ export default function PianoTeacherApp(){
     adsr, setAdsr,
     actualMidiDuration, setActualMidiDuration,
     isAutoPlaying, setIsAutoPlaying,
+    octave, setOctave,
+    showKeyLabels, setShowKeyLabels,
   } = usePianoTeacherState();
   const {
     canvasRef,
@@ -106,8 +107,8 @@ export default function PianoTeacherApp(){
 
 
   useMidiInputHandler(midiAccess, setPressedKeys, handleUserNoteOn);
-  useComputerKeyboardInput(setPressedKeys, handleUserNoteOn);
-  useFallingNotesAnimation(canvasRef, fallingNotes, setActiveFallingNotesCount, fallingReqRef, tempoFactor, fallingNoteColorRef, 294, 60);
+  useComputerKeyboardInput(setPressedKeys, handleUserNoteOn, octave, setOctave);
+  
   const { startPlayback, stopPlayback } = usePlayback(
     midi,
     synth,
@@ -196,7 +197,7 @@ export default function PianoTeacherApp(){
         <CountdownOverlay countdownValue={countdownValue} />
         <div style={pianoContainerStyle} className={`rounded-lg shadow-2xl`}>
         <div style={{ padding: '10px' }}>
-          <Header theme={theme} setTheme={setTheme} midiError={midiError} connectedInputs={connectedInputs} onGuideClick={showGuide} onToggleFullscreen={onToggleFullscreen} />
+          <Header theme={theme} setTheme={setTheme} midiError={midiError} connectedInputs={connectedInputs} onGuideClick={showGuide} onToggleFullscreen={onToggleFullscreen} octave={octave} />
           {/* Controls component below the header, spanning full width */}
           <Controls
             selectedSong={selectedSong}
@@ -222,9 +223,23 @@ export default function PianoTeacherApp(){
             setIsAutoPlaying={setIsAutoPlaying}
             resetScore={resetScore}
             stopPlayback={stopPlaybackAndAutoPlay} // Use the new function
+            showKeyLabels={showKeyLabels}
+            setShowKeyLabels={setShowKeyLabels}
+            octave={octave}
             className="mb-4" 
           /> {/* Added mb-4 for bottom margin */}
-          {mode === 'fall' && <FallingNotesCanvas canvasRef={canvasRef} height={354} />}
+          {mode === 'fall' && (
+            <FallingNotesCanvas 
+              canvasRef={canvasRef}
+              events={events} 
+              isPlaying={isPlaying} 
+              tempoFactor={tempoFactor} 
+              theme={theme} 
+              keyPositionsRef={keyPositionsRef} 
+              mode={mode} 
+              keys={keys}
+            />
+          )}
           {isClient && (
             <div className="mb-8">
               <Keyboard
@@ -236,6 +251,8 @@ export default function PianoTeacherApp(){
                 keyboardRef={keyboardRef}
                 pressedKeys={pressedKeys}
                 isAutoPlaying={isAutoPlaying}
+                showKeyLabels={showKeyLabels}
+                octave={octave}
               />
             </div>
           )}

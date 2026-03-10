@@ -1,73 +1,103 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import * as Tone from 'tone';
 
-export function useFallingNotesAnimation(canvasRef, fallingNotes, setActiveFallingNotesCount, fallingReqRef, tempoFactor, fallingNoteColorRef, targetZoneY, targetZoneHeight) {
+export function useFallingNotesAnimation(
+  canvasRef, 
+  events, 
+  isPlaying, 
+  tempoFactor, 
+  fallingNoteColorRef, 
+  keyPositionsRef,
+  mode
+) {
+  const animationReqRef = useRef();
+
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!canvas || mode !== 'fall') return;
+    
     const ctx = canvas.getContext('2d');
-    let last = performance.now();
-    const speed = 0.12;
+    
+    // Configuración visual
+    // Pixels per second determines how fast the notes fall.
+    const pixelsPerSecond = 180 * tempoFactor; 
+    
+    // hitZoneY is exactly where the bottom of the note should be at its start time.
+    // It's at the bottom of the canvas.
+    const hitZoneY = canvas.height; 
+    
+    // lookAheadTime: how many seconds worth of music we can see from y=0 to y=hitZoneY
+    const lookAheadTime = canvas.height / pixelsPerSecond;
 
-    function loop(now) {
-      console.log('Animation loop running in useFallingNotesAnimation');
-      const dt = now - last; last = now;
+    function render() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Draw target zone
-      if (typeof targetZoneY === 'number' && typeof targetZoneHeight === 'number') {
-        console.log('Drawing target zone', { targetZoneY, targetZoneHeight });
-        ctx.fillStyle = 'rgba(124, 58, 237, 0.5)'; // Accent blue with increased transparency
-        ctx.fillRect(0, targetZoneY, canvas.width, targetZoneHeight);
-      }
+      if (isPlaying) {
+        const currentTime = Tone.Transport.seconds;
 
-      const fnotes = fallingNotes;
-      const flashDuration = 300; // milliseconds
+        if (events && events.length > 0) {
+          for (let i = 0; i < events.length; i++) {
+            const note = events[i];
+            const noteStartTime = note.time;
+            const noteEndTime = note.time + note.duration;
 
-      const updatedFallingNotes = [];
-      let removedCount = 0;
+            // Visibility checks
+            // 1. If the whole note (including tail) has passed the hitZone, stop drawing
+            if (noteEndTime < currentTime) continue;
+            
+            // 2. If the start of the note is still above the top edge (y < 0)
+            // Note is visible if it hits the hitZone within lookAheadTime from now
+            if (noteStartTime > currentTime + lookAheadTime) continue;
 
-      for (let i = 0; i < fnotes.length; i++) {
-        const fn = fnotes[i];
-        if (!fn) continue;
+            const x = keyPositionsRef.current[note.midi];
+            if (x === undefined) continue;
 
-        // Handle hit notes for visual feedback and disappearance
-        if (fn.hitStatus && fn.hitTime) {
-          const timeSinceHit = now - fn.hitTime;
-          if (timeSinceHit < flashDuration) {
-            // Flash color
-            ctx.fillStyle = fn.hitStatus === 'correct' ? 'rgba(0, 255, 0, 0.7)' : 'rgba(255, 0, 0, 0.7)';
-          } else {
-            // Note has finished flashing, mark for removal
-            removedCount++;
-            continue; // Skip drawing this note
+            // Calculation:
+            // Distance from hit zone = (time until note starts) * pixels/second
+            const timeUntilHit = noteStartTime - currentTime;
+            
+            // yBase is the BOTTOM of the note rectangle (where the attack happens)
+            const yBase = hitZoneY - (timeUntilHit * pixelsPerSecond);
+            const noteHeight = note.duration * pixelsPerSecond;
+
+            // The top of the rectangle is yBase - noteHeight
+            const yTop = yBase - noteHeight;
+
+            // Draw note body
+            ctx.fillStyle = fallingNoteColorRef.current;
+            ctx.fillRect(x - 14, yTop, 28, noteHeight);
+            
+            // Draw highlight/border
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(x - 14, yTop, 28, noteHeight);
+            
+            // Shine effect on the leading edge (bottom)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.fillRect(x - 14, yBase - 2, 28, 2);
           }
-        } else {
-          // Normal falling note color
-          ctx.fillStyle = fallingNoteColorRef.current;
         }
-
-        if (typeof fn.y !== 'number') fn.y = -20;
-        const newY = fn.y + dt * speed * (1 / tempoFactor);
-        try {
-          const drawX = (typeof fn.x === 'number') ? fn.x : 0;
-          const noteHeight = (typeof fn.duration === 'number') ? fn.duration * 100 : 12; // Scale duration to height
-          ctx.fillRect(drawX - 18, newY - noteHeight, 36, noteHeight);
-        } catch (e) { /* drawing error - skip */ }
-        updatedFallingNotes.push({ ...fn, y: newY });
       }
 
-      if (removedCount > 0) {
-        setActiveFallingNotesCount(prev => Math.max(0, prev - removedCount));
-      }
+      // Draw the hit zone line at the very bottom
+      ctx.strokeStyle = isPlaying ? 'rgba(124, 58, 237, 0.8)' : 'rgba(124, 58, 237, 0.3)';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(0, canvas.height - 2);
+      ctx.lineTo(canvas.width, canvas.height - 2);
+      ctx.stroke();
 
-      // fallingNotesRef.current = updatedFallingNotes.filter(fn => fn && typeof fn.y === 'number' && fn.y < canvas.height + 50); // Removed as fallingNotes is now state
-      fallingReqRef.current = requestAnimationFrame(loop);
+      animationReqRef.current = requestAnimationFrame(render);
     }
-    fallingReqRef.current = requestAnimationFrame(loop);
+
+    animationReqRef.current = requestAnimationFrame(render);
+
     return () => {
-      if (fallingReqRef.current) cancelAnimationFrame(fallingReqRef.current);
+      if (animationReqRef.current) {
+        cancelAnimationFrame(animationReqRef.current);
+      }
     };
-  }, [canvasRef, fallingNotes, setActiveFallingNotesCount, fallingReqRef, tempoFactor, fallingNoteColorRef, targetZoneY, targetZoneHeight]);
+  }, [canvasRef, isPlaying, tempoFactor, fallingNoteColorRef, keyPositionsRef, mode, events]);
 }

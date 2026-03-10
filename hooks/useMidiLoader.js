@@ -5,6 +5,7 @@ import { Midi } from '@tonejs/midi';
 
 
 const availableSongs = [
+  { name: 'Simple - Twinkle Twinkle Little Star', file: 'Twinkle-Twinkle.mid' },
   { name: 'Beethoven - Moonlight Sonata', file: 'Beethoven-Moonlight-Sonata.mid' },
   { name: 'Mozart - Fur Elise', file: 'Mozart-Fur-Elise.mid' },
 ];

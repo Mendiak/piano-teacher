@@ -2,7 +2,7 @@
 
 import { FaSun, FaMoon, FaQuestionCircle, FaExpand } from 'react-icons/fa';
 
-export default function Header({ theme, setTheme, midiError, connectedInputs, onGuideClick, onToggleFullscreen }) {
+export default function Header({ theme, setTheme, midiError, connectedInputs, onGuideClick, onToggleFullscreen, octave }) {
   return (
     <>
       <style>{`

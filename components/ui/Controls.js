@@ -1,29 +1,44 @@
+'use client';
+
 import { useState } from 'react';
-import { FaPlay, FaStop, FaChartBar, FaMusic, FaGamepad, FaTachometerAlt, FaWaveSquare, FaChevronDown, FaChevronUp, FaSync } from 'react-icons/fa';
+import { 
+  FaPlay, FaStop, FaChartBar, FaMusic, FaGamepad, 
+  FaTachometerAlt, FaWaveSquare, FaChevronDown, 
+  FaChevronUp, FaSync, FaKeyboard, FaMagic 
+} from 'react-icons/fa';
 import { synthPresets } from '../synth-presets.js';
 
-const ADSRSlider = ({ name, value, onChange, min = 0, max = 1, step = 0.01 }) => (
-  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem', width: '100%' }}>
-    <label htmlFor={`${name}-range`} style={{ fontSize: '0.875rem', color: 'var(--fg)', textTransform: 'capitalize' }}>
-      {name}: {Number(value).toFixed(2)}
-    </label>
-    <input
-      id={`${name}-range`}
-      type="range"
-      min={min}
-      max={max}
-      step={step}
-      value={value}
-      onChange={onChange}
-      style={{ width: '100%', height: '0.5rem', backgroundColor: 'var(--black-key)', borderRadius: '0.5rem', appearance: 'none', cursor: 'pointer', accentColor: 'var(--accent)' }}
-    />
+const CompactControl = ({ icon: Icon, children, label }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem', minWidth: '110px', flex: 1 }}>
+    <span style={{ fontSize: '0.65rem', fontWeight: '700', opacity: 0.5, textTransform: 'uppercase', display: 'flex', alignItems: 'center', color: 'var(--fg)' }}>
+      <Icon style={{ marginRight: '0.3rem' }} size={10} /> {label}
+    </span>
+    {children}
+  </div>
+);
+
+const ActionGroup = ({ children, label }) => (
+  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+    <span style={{ fontSize: '0.6rem', fontWeight: '700', opacity: 0.4, textTransform: 'uppercase', textAlign: 'center', color: 'var(--fg)' }}>
+      {label}
+    </span>
+    <div style={{ 
+      display: 'flex', 
+      gap: '0.3rem', 
+      backgroundColor: 'rgba(0,0,0,0.15)', 
+      padding: '0.25rem', 
+      borderRadius: '0.5rem',
+      border: '1px solid rgba(255,255,255,0.05)'
+    }}>
+      {children}
+    </div>
   </div>
 );
 
 export default function Controls({
   selectedSong,
   handleSongSelection,
-  availableSongs, // Changed from midiLibrary
+  availableSongs,
   loadMidi,
   mode,
   setMode,
@@ -31,7 +46,7 @@ export default function Controls({
   setTempoFactor,
   startPlayback,
   stopPlayback,
-  restartSong, // New prop
+  restartSong,
   showResults,
   isPlaying,
   midi,
@@ -41,184 +56,181 @@ export default function Controls({
   setAdsr,
   isAutoPlaying,
   setIsAutoPlaying,
+  octave,
+  showKeyLabels,
+  setShowKeyLabels,
+  className
 }) {
   const [isAdsrVisible, setIsAdsrVisible] = useState(false);
 
-  const handleAdsrChange = (param) => (e) => {
-    setAdsr(prev => ({ ...prev, [param]: parseFloat(e.target.value) }));
+  const selectStyle = {
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+    color: 'var(--fg)',
+    padding: '0.4rem 0.5rem',
+    borderRadius: '0.4rem',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    fontSize: '0.85rem',
+    outline: 'none',
+    cursor: 'pointer',
+    width: '100%',
+    fontFamily: 'inherit'
   };
 
-  const toggleAutoPlaying = () => {
-    setIsAutoPlaying(prev => !prev);
-    // Optionally, stop playback when toggling auto-play mode
-    if (isPlaying) {
-      stopPlayback();
-    }
-  };
+  const actionBtnStyle = (active, color = 'var(--accent)') => ({
+    padding: '0.5rem',
+    borderRadius: '0.35rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '0.9rem',
+    cursor: 'pointer',
+    transition: 'all 0.2s',
+    backgroundColor: active ? color : 'transparent',
+    color: active ? '#fff' : (color === 'var(--fg)' ? 'var(--fg)' : color),
+    border: 'none',
+    minWidth: '32px',
+    height: '32px'
+  });
 
   return (
-    <div style={{
+    <div className={className} style={{
       display: 'flex',
-      flexDirection: 'row', // Default to row for horizontal layout
-      flexWrap: 'wrap',
-      justifyContent: 'center',
-      alignItems: 'flex-start',
-      gap: '0.75rem', // Reduced gap for better spacing with new button
-      padding: '1rem',
-      backgroundColor: 'var(--controls-bg)',
-      borderRadius: '0.75rem', // rounded-xl
-      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)', // shadow-lg
-      fontFamily: 'Poppins, sans-serif',
+      flexDirection: 'column',
+      gap: '0.75rem',
+      width: '100%',
+      boxSizing: 'border-box',
+      marginBottom: '1rem'
     }}>
-      {/* Song Selection */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '200px', flexGrow: 1 }}>
-        <label htmlFor="song-select" style={{ display: 'flex', alignItems: 'center', fontSize: '1.125rem', fontWeight: '600', color: 'var(--fg)' }}>
-          <FaMusic style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Canción:
-        </label>
-        <select
-          style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent', fontFamily: 'inherit' }}
-          value={selectedSong || ''} // Use empty string if selectedSong is null
-          onChange={e => handleSongSelection(e.target.value)}
-        >
-          {availableSongs.map(song => (
-            <option key={song.name} value={song.name}>{song.name}</option>
-          ))}
-          <option value="custom">Subir MIDI propio</option>
-        </select>
-        {selectedSong === 'custom' && (
-          <input
-            type="file"
-            accept=".mid,.midi"
-            style={{ marginTop: '0.5rem', fontSize: '0.875rem', color: '#d1d5db', fontFamily: 'inherit' }}
-            onChange={e => { if (e.target.files.length) loadMidi(e.target.files[0]); }}
-          />
-        )}
-      </div>
-
-      {/* Mode Selection */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '150px', flexGrow: 1 }}>
-        <label htmlFor="mode-select" style={{ display: 'flex', alignItems: 'center', fontSize: '1.125rem', fontWeight: '600', color: 'var(--fg)' }}>
-          <FaGamepad style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Modo:
-        </label>
-                <select
-                  id="mode-select"
-                  style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent', fontFamily: 'inherit' }}
-                  value={mode}
-                  onChange={e => setMode(e.target.value)}
-                >            <option value="step">Paso a paso</option>
-          <option value="fall">Falling notes</option>
-        </select>
-      </div>
-
-      {/* Tempo Control */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', minWidth: '150px', flexGrow: 1 }}>
-        <label htmlFor="tempo-range" style={{ display: 'flex', alignItems: 'center', fontSize: '1.125rem', fontWeight: '600', color: 'var(--fg)' }}>
-          <FaTachometerAlt style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Tempo:
-        </label>
-        <input
-          id="tempo-range"
-          type="range"
-          min="0.5"
-          max="2"
-          step="0.1"
-          value={tempoFactor}
-          onChange={e => setTempoFactor(parseFloat(e.target.value))}
-          style={{ width: '100%', height: '0.5rem', backgroundColor: 'var(--black-key)', borderRadius: '0.5rem', appearance: 'none', cursor: 'pointer', accentColor: 'var(--accent)' }}
-        />
-        <span style={{ fontSize: '0.875rem', color: 'var(--fg)' }}>{Math.round(tempoFactor * 100)}%</span>
-      </div>
-
-      {/* Synth Selection & ADSR */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', minWidth: '200px', flexGrow: 1 }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          <label htmlFor="synth-select" style={{ display: 'flex', alignItems: 'center', fontSize: '1.125rem', fontWeight: '600', color: 'var(--fg)' }}>
-            <FaMusic style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Sonido:
-          </label>
-          <select
-            id="synth-select"
-            style={{ backgroundColor: 'var(--black-key)', color: 'var(--select-fg)', padding: '0.75rem', borderRadius: '0.375rem', outline: 'none', borderWidth: '2px', borderColor: 'transparent', fontFamily: 'inherit' }}
-            value={selectedSynthPreset}
-            onChange={e => setSelectedSynthPreset(e.target.value)}
-          >
-            {Object.keys(synthPresets).map(presetKey => (
-              <option key={presetKey} value={presetKey}>{synthPresets[presetKey].name}</option>
+      
+      {/* Row 1: Main Configs and Actions */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', gap: '1rem' }}>
+        
+        <CompactControl label="Canción" icon={FaMusic}>
+          <select style={selectStyle} value={selectedSong || ''} onChange={e => handleSongSelection(e.target.value)}>
+            {availableSongs.map(song => (
+              <option key={song.name} value={song.name} style={{background: '#1e293b'}}>{song.name}</option>
             ))}
+            <option value="custom" style={{background: '#1e293b'}}>📁 Subir MIDI...</option>
           </select>
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <button onClick={() => setIsAdsrVisible(!isAdsrVisible)} style={{ background: 'none', border: 'none', color: 'var(--fg)', cursor: 'pointer', display: 'flex', alignItems: 'center', fontSize: '1.125rem', fontWeight: '600', padding: 0 }}>
-              <FaWaveSquare style={{ color: 'var(--accent)', marginRight: '0.5rem' }} /> Envolvente (ADSR)
-              {isAdsrVisible ? <FaChevronUp style={{ marginLeft: '0.5rem' }} /> : <FaChevronDown style={{ marginLeft: '0.5rem' }} />}
+        </CompactControl>
+
+        <CompactControl label="Modo" icon={FaGamepad}>
+          <select style={selectStyle} value={mode} onChange={e => setMode(e.target.value)}>
+            <option value="step" style={{background: '#1e293b'}}>Paso a paso</option>
+            <option value="fall" style={{background: '#1e293b'}}>Cascada</option>
+          </select>
+        </CompactControl>
+
+        <CompactControl label={`Tempo: ${Math.round(tempoFactor * 100)}%`} icon={FaTachometerAlt}>
+          <input
+            type="range" min="0.5" max="2" step="0.1"
+            value={tempoFactor}
+            onChange={e => setTempoFactor(parseFloat(e.target.value))}
+            style={{ width: '100%', accentColor: 'var(--accent)', height: '4px', cursor: 'pointer' }}
+          />
+        </CompactControl>
+
+        <CompactControl label="Sonido" icon={FaMagic}>
+          <div style={{ display: 'flex', gap: '0.3rem' }}>
+            <select style={{ ...selectStyle, minWidth: '90px' }} value={selectedSynthPreset} onChange={e => setSelectedSynthPreset(e.target.value)}>
+              {Object.keys(synthPresets).map(presetKey => (
+                <option key={presetKey} value={presetKey} style={{background: '#1e293b'}}>{synthPresets[presetKey].name}</option>
+              ))}
+            </select>
+            <button 
+              onClick={() => setIsAdsrVisible(!isAdsrVisible)} 
+              title="Ajustar Envolvente (ADSR)"
+              style={actionBtnStyle(isAdsrVisible)}
+            >
+              <FaWaveSquare size={12} />
             </button>
-            {isAdsrVisible && (
-              <>
-                <ADSRSlider name="attack" value={adsr.attack} onChange={handleAdsrChange('attack')} max={2} />
-                <ADSRSlider name="decay" value={adsr.decay} onChange={handleAdsrChange('decay')} max={2} />
-                <ADSRSlider name="sustain" value={adsr.sustain} onChange={handleAdsrChange('sustain')} max={1} />
-                <ADSRSlider name="release" value={adsr.release} onChange={handleAdsrChange('release')} max={5} />
-              </>
-            )}
+          </div>
+        </CompactControl>
+
+        {/* Action Groups */}
+        <div style={{ display: 'flex', gap: '0.75rem', marginLeft: 'auto', alignItems: 'flex-end' }}>
+          
+          <ActionGroup label="Reproducción">
+            <button 
+              onClick={() => startPlayback()} 
+              disabled={isPlaying || !midi} 
+              title="Reproducir canción (Enter)" 
+              style={{ ...actionBtnStyle(false), backgroundColor: isPlaying ? 'transparent' : 'var(--accent)', color: '#fff', opacity: (isPlaying || !midi) ? 0.3 : 1 }}
+            >
+              <FaPlay size={12} />
+            </button>
+            <button 
+              onClick={stopPlayback} 
+              disabled={!isPlaying} 
+              title="Detener reproducción (Esc)" 
+              style={actionBtnStyle(false, '#ef4444')}
+            >
+              <FaStop size={12} />
+            </button>
+            <button 
+              onClick={() => restartSong()} 
+              title="Reiniciar desde el principio" 
+              style={actionBtnStyle(false, 'var(--fg)')}
+            >
+              <FaSync size={12} />
+            </button>
+          </ActionGroup>
+
+          <ActionGroup label="Herramientas">
+            <button 
+              onClick={() => setShowKeyLabels(!showKeyLabels)} 
+              title={showKeyLabels ? "Ocultar letras en las teclas" : "Mostrar letras en las teclas"} 
+              style={actionBtnStyle(showKeyLabels)}
+            >
+              <FaKeyboard size={12} />
+            </button>
+            <button 
+              onClick={() => setIsAutoPlaying(!isAutoPlaying)} 
+              title={isAutoPlaying ? "Desactivar modo demostración" : "Activar modo demostración (Auto-Play)"} 
+              style={actionBtnStyle(isAutoPlaying, '#10b981')}
+            >
+              <FaMagic size={12} />
+            </button>
+            <button 
+              onClick={() => showResults()} 
+              title="Ver estadísticas de la sesión" 
+              style={actionBtnStyle(false, 'var(--fg)')}
+            >
+              <FaChartBar size={12} />
+            </button>
+          </ActionGroup>
+
         </div>
       </div>
 
-      {/* Playback Buttons */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', marginTop: '1rem', minWidth: '200px', flexGrow: 1 }}>
-                <button
-                  onClick={() => startPlayback()}
-                  disabled={isPlaying || !midi}
-                  title="Reproducir"
-                  style={{ color: 'var(--accent)', padding: '0.75rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', transitionProperty: 'all', transitionDuration: '200ms', opacity: (isPlaying || !midi) ? 0.5 : 1, cursor: (isPlaying || !midi) ? 'not-allowed' : 'pointer', background: 'none', border: '1px solid var(--accent)', '&:hover': { backgroundColor: 'var(--accent)', color: 'var(--bg)' } }}
-                >
-                  <FaPlay />
-                </button>
-                <button
-                  onClick={stopPlayback}
-                  disabled={!isPlaying}
-                  title="Detener"
-                  style={{ color: 'var(--fg)', padding: '0.75rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', transitionProperty: 'all', transitionDuration: '200ms', background: 'none', border: '1px solid var(--fg)', opacity: !isPlaying ? 0.5 : 1, cursor: !isPlaying ? 'not-allowed' : 'pointer', '&:hover': { backgroundColor: 'var(--fg)', color: 'var(--bg)' } }}
-                >
-                  <FaStop />
-                </button>
-                <button
-                  onClick={() => restartSong()} // Changed from resetScore()
-                  title="Reiniciar Canción" // Changed title
-                  style={{ color: 'var(--accent)', padding: '0.75rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', transitionProperty: 'all', transitionDuration: '200ms', background: 'none', border: '1px solid var(--accent)', '&:hover': { backgroundColor: 'var(--accent)', color: 'var(--bg)' } }}
-                >
-                  <FaSync />
-                </button>
-                <button
-                  onClick={() => showResults()}
-                  title="Mostrar Resultados"
-                  style={{ color: 'var(--accent)', padding: '0.75rem', borderRadius: '9999px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.25rem', transitionProperty: 'all', transitionDuration: '200ms', background: 'none', border: '1px solid var(--accent)', '&:hover': { backgroundColor: 'var(--accent)', color: 'var(--bg)' } }}
-                >
-                  <FaChartBar />
-                </button>
-                <button
-                  onClick={toggleAutoPlaying}
-                  title={isAutoPlaying ? "Desactivar Auto-Play" : "Activar Auto-Play"}
-                  style={{
-                    color: isAutoPlaying ? 'var(--bg)' : 'var(--accent)',
-                    backgroundColor: isAutoPlaying ? 'var(--accent)' : 'transparent',
-                    padding: '0.75rem',
-                    borderRadius: '9999px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: '1.25rem',
-                    transitionProperty: 'all',
-                    transitionDuration: '200ms',
-                    border: '1px solid var(--accent)',
-                    cursor: 'pointer',
-                    '&:hover': {
-                      backgroundColor: isAutoPlaying ? 'var(--accent)' : 'var(--accent)',
-                      color: isAutoPlaying ? 'var(--fg)' : 'var(--bg)',
-                    }
-                  }}
-                >
-                  <FaPlay /> Auto
-                </button>
+      {/* Row 2: ADSR & Octave Info */}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <span style={{ fontSize: '0.7rem', color: 'var(--accent)', fontWeight: '800', backgroundColor: 'rgba(124, 58, 237, 0.15)', padding: '0.2rem 0.5rem', borderRadius: '0.3rem', border: '1px solid rgba(124, 58, 237, 0.3)' }}>
+            OCTAVA: {octave}
+          </span>
+          <span style={{ fontSize: '0.6rem', opacity: 0.4, color: 'var(--fg)' }}>Usa Z / X para moverte por el piano</span>
+        </div>
+
+        {isAdsrVisible && (
+          <div style={{ flex: 1, display: 'flex', gap: '1rem', padding: '0.4rem 0.75rem', backgroundColor: 'rgba(0,0,0,0.15)', borderRadius: '0.5rem', border: '1px solid rgba(255,255,255,0.05)' }}>
+            {['attack', 'decay', 'sustain', 'release'].map(param => (
+              <div key={param} style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.1rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.6rem', opacity: 0.6, color: 'var(--fg)' }}>
+                  <span style={{ textTransform: 'capitalize' }}>{param.substring(0,3)}</span>
+                  <span>{adsr[param].toFixed(1)}</span>
+                </div>
+                <input
+                  type="range" min="0" max={param === 'release' ? 5 : (param === 'sustain' ? 1 : 2)} step="0.1"
+                  value={adsr[param]}
+                  onChange={e => setAdsr(prev => ({ ...prev, [param]: parseFloat(e.target.value) }))}
+                  style={{ width: '100%', accentColor: 'var(--accent)', height: '2px', cursor: 'pointer' }}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-  

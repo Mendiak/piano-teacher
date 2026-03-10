@@ -9,7 +9,7 @@ export function usePianoTeacherState() {
   const [events, setEvents] = useState([]);
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [tempoFactor, setTempoFactor] = useState(1);
+  const [tempoFactor, setTempoFactor] = useState(0.8);
   const [selectedSong, setSelectedSong] = useState(null); // Initialize to null
   const [theme, setTheme] = useState('light');
   const [selectedSynthPreset, setSelectedSynthPreset] = useState('default');
@@ -18,6 +18,8 @@ export function usePianoTeacherState() {
   const [adsr, setAdsr] = useState(synthPresets.default.options.envelope);
   const [actualMidiDuration, setActualMidiDuration] = useState(0); // New state for actual MIDI duration
   const [isAutoPlaying, setIsAutoPlaying] = useState(false); // New state for auto-play mode
+  const [octave, setOctave] = useState(3);
+  const [showKeyLabels, setShowKeyLabels] = useState(true);
 
   useEffect(() => {
     const newPreset = synthPresets[selectedSynthPreset];
@@ -41,5 +43,7 @@ export function usePianoTeacherState() {
     adsr, setAdsr,
     actualMidiDuration, setActualMidiDuration, // Return new state
     isAutoPlaying, setIsAutoPlaying, // Return new state
+    octave, setOctave,
+    showKeyLabels, setShowKeyLabels,
   };
 }
