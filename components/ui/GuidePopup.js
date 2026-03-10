@@ -35,7 +35,7 @@ export default function GuidePopup({ onClose }) {
         <h3 style={{ fontSize: '1.25rem', fontWeight: '600', marginTop: '1.5rem', marginBottom: '0.5rem' }}>Conectar un Teclado MIDI USB</h3>
         <p>
           1. Conecta tu teclado MIDI a tu ordenador mediante un cable USB.<br />
-          2. **Acepta los permisos de tu navegador** para que la aplicación pueda acceder a tus dispositivos MIDI (se recomienda Chrome).<br />
+          2. **Acepta los permisos de tu navegador** para que la aplicación pueda acceder a tus dispositivos MIDI (se recomienda Chrome o Firefox).<br />
           3. Recarga la página. La aplicación debería detectar tu teclado automáticamente. Verás el nombre de tu dispositivo en la cabecera.
         </p>
 

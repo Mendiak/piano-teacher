@@ -15,7 +15,7 @@ export function useMidi() {
         ma.onstatechange = () => setConnectedInputs(Array.from(ma.inputs.values()));
       }).catch(e => {
         console.warn('MIDI not available', e);
-        setMidiError('MIDI not available. Please use a compatible browser (Chrome, Edge) and grant permission.');
+        setMidiError('MIDI not available. Please use a compatible browser (Chrome, Firefox, Edge) and grant permission.');
       });
     } else {
       setMidiError('Web MIDI API is not supported in this browser.');
