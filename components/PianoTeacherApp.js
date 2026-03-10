@@ -20,6 +20,7 @@ import { usePlayback } from '../hooks/usePlayback.js';
 import { useScoring } from '../hooks/useScoring.js';
 import { useSynth } from '../hooks/useSynth.js';
 import { useTheme } from '../hooks/useTheme.js';
+import { useComputerKeyboardInput } from '../hooks/useComputerKeyboardInput.js';
 import { getKeyboardConfig } from '../utils/midiUtils.js';
 import ResultsPopup from './ui/ResultsPopup.js';
 import GuidePopup from './ui/GuidePopup.js';
@@ -105,6 +106,7 @@ export default function PianoTeacherApp(){
 
 
   useMidiInputHandler(midiAccess, setPressedKeys, handleUserNoteOn);
+  useComputerKeyboardInput(setPressedKeys, handleUserNoteOn);
   useFallingNotesAnimation(canvasRef, fallingNotes, setActiveFallingNotesCount, fallingReqRef, tempoFactor, fallingNoteColorRef, 294, 60);
   const { startPlayback, stopPlayback } = usePlayback(
     midi,
